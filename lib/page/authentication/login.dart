@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gotech_app/modal/modal_authentication.dart';
 import 'package:gotech_app/responsive/repo.dart';
@@ -26,11 +28,11 @@ class _LoginState extends State<Login> {
     showPassword.value = !showPassword.value;
   }
 
-  void showLoaderDialog(BuildContext context) {
+  void showLoaderDialog(BuildContext context, Function()? callback) {
     AlertDialog alert = AlertDialog(
       insetPadding: const EdgeInsets.all(100),
       content: SizedBox(
-        height: 100,
+        height: 150,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -38,6 +40,8 @@ class _LoginState extends State<Login> {
             Container(
                 margin: const EdgeInsets.only(top: 16),
                 child: const Text("Authenticating...")),
+            ElevatedButton(
+                onPressed: (() => {callback!()}), child: Text("Cancel"))
           ],
         ),
       ),
@@ -54,14 +58,17 @@ class _LoginState extends State<Login> {
   void _handleClickSubmitLogin(
       String username, String password, BuildContext context) {
     if (_formKey.currentState?.validate() == true) {
-      showLoaderDialog(context);
+      showLoaderDialog(context, () {
+        print("dahuy");
+        Navigator.pop(context);
+      });
 
       Future<ModalAuthentication> res =
           GotechRespontive.fetchPostLogin(username, password);
 
       res.then((value) {
         if (_isThereCurrentDialogShowing(context) == true) {
-          Navigator.pop(context);
+          // Navigator.pop(context);
         }
 
         if (value.success == true) {

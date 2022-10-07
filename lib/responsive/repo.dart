@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:gotech_app/modal/modal_authentication.dart';
+import 'package:gotech_app/modal/modal_detail_product.dart';
 import 'package:gotech_app/modal/modal_product_item.dart';
+import 'package:gotech_app/page/app/detail_product/detail_product.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 import 'api.dart';
 
@@ -51,6 +54,26 @@ class GotechRespontive {
       return [];
     } else {
       throw ("fetch list hot sale get error");
+    }
+  }
+
+  static Future<ModalDetailProduct> fetchGetDetailProduct(
+      String idProduct) async {
+    final res = await http
+        .get(Uri.parse("${GotechApi.domain}/product/${idProduct}"))
+        .timeout(Duration(seconds: 10), onTimeout: () {
+      return Response("error", 408);
+    });
+
+    if (res.statusCode == 200) {
+      late ModalDetailProduct dt;
+      dynamic dt1 = jsonDecode(res.body);
+      dt = ModalDetailProduct.fromJson(dt1[0]);
+      return dt;
+    } else if (res.statusCode == 408) {
+      return ModalDetailProduct();
+    } else {
+      throw ("fetch detail product get error");
     }
   }
 }

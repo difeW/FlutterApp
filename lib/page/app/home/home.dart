@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gotech_app/modal/modal_product_item.dart';
 import 'package:gotech_app/responsive/repo.dart';
+import 'package:gotech_app/router/router_manager.dart';
 import 'package:gotech_app/widget/card_button.dart';
 import 'package:intl/intl.dart';
 
@@ -43,7 +44,9 @@ class _HomeState extends State<Home> {
                           children: list
                               .map((e) => CardButton(
                                     onTap: () {
-                                      print("e.id Trai");
+                                      Navigator.pushNamed(
+                                          context, RouteManager.detailProduct,
+                                          arguments: e.id);
                                     },
                                     child: Container(
                                       alignment: Alignment.center,
@@ -80,19 +83,15 @@ class _HomeState extends State<Home> {
                                               MainAxisAlignment.spaceAround,
                                           children: [
                                             Text(
-                                              oCcy.format(e.mSRP).toString() +
-                                                  " đ",
-                                              style: TextStyle(
+                                              "${oCcy.format(e.mSRP)} đ",
+                                              style: const TextStyle(
                                                   fontSize: 11,
                                                   decoration: TextDecoration
                                                       .lineThrough),
                                             ),
                                             Text(
-                                              oCcy
-                                                      .format(e.unitPrice)
-                                                      .toString() +
-                                                  " đ",
-                                              style: TextStyle(
+                                              "${oCcy.format(e.unitPrice)} đ",
+                                              style: const TextStyle(
                                                 fontSize: 12,
                                                 color: Colors.red,
                                                 fontWeight: FontWeight.bold,
@@ -109,10 +108,11 @@ class _HomeState extends State<Home> {
                                   ))
                               .toList()),
                     );
-                  } else
+                  } else {
                     return SingleChildScrollView(
                       child: Wrap(children: [Text("khong data")]),
                     );
+                  }
                 }))),
       )),
     );
@@ -120,7 +120,7 @@ class _HomeState extends State<Home> {
 
   AppBar _appbar() {
     return AppBar(
-      backgroundColor: Color.fromARGB(255, 179, 60, 0),
+      backgroundColor: const Color.fromARGB(255, 179, 60, 0),
       title: const Text(
         "HOME",
         style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
