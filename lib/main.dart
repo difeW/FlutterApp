@@ -16,7 +16,7 @@ class App extends StatelessWidget {
           primaryColor: Color.fromARGB(255, 179, 60, 0),
           scaffoldBackgroundColor: const Color.fromARGB(255, 244, 243, 242)),
       onGenerateRoute: RouteManager.generateRoute,
-      initialRoute: RouteManager.login,
+      initialRoute: RouteManager.home,
     );
   }
 }

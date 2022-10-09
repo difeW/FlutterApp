@@ -26,11 +26,12 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width;
     final sizeh = MediaQuery.of(context).size.height;
+    ValueNotifier<String> selected = ValueNotifier("");
 
     return Scaffold(
       appBar: _appbar(),
       body: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
         width: size,
         child: Padding(
             padding: const EdgeInsets.all(8),
@@ -42,68 +43,79 @@ class _HomeState extends State<Home> {
                     return SingleChildScrollView(
                       child: Wrap(
                           children: list
-                              .map((e) => CardButton(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, RouteManager.detailProduct,
-                                          arguments: e.id);
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      padding: const EdgeInsets.only(
-                                        top: 8,
-                                      ),
-                                      width: size > sizeh
-                                          ? size / 4 - 16 * 2 + 8 + 4
-                                          : size / 2 - 16 * 2 + 8,
-                                      height: 300,
-                                      child: Column(children: [
-                                        Image.network(
-                                          e.picture ?? "",
-                                          height: 100,
+                              .map((e) => AnimatedBuilder(
+                                    animation: selected,
+                                    builder: (_, __) => CardButton(
+                                      backgroundColor: selected.value == e.id
+                                          ? Colors.red
+                                          : Colors.white,
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, RouteManager.detailProduct,
+                                            arguments: DataSendDetailProduct(
+                                                id: e.id,
+                                                callBack: (String string) {
+                                                  print(string);
+                                                  selected.value = e.id ?? "";
+                                                }));
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        padding: const EdgeInsets.only(
+                                          top: 8,
                                         ),
-                                        const SizedBox(
-                                          height: 16,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          child: Text(
-                                            e.productName ?? "",
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        width: size > sizeh
+                                            ? size / 4 - 16 * 2 + 8 + 4
+                                            : size / 2 - 16 * 2 + 8,
+                                        height: 300,
+                                        child: Column(children: [
+                                          Image.network(
+                                            e.picture ?? "",
+                                            height: 100,
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          height: 16,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Text(
-                                              "${oCcy.format(e.mSRP)} đ",
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16),
+                                            child: Text(
+                                              e.productName ?? "",
                                               style: const TextStyle(
-                                                  fontSize: 11,
-                                                  decoration: TextDecoration
-                                                      .lineThrough),
-                                            ),
-                                            Text(
-                                              "${oCcy.format(e.unitPrice)} đ",
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.red,
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 16,
-                                        ),
-                                        _star(),
-                                      ]),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Text(
+                                                "${oCcy.format(e.mSRP)} đ",
+                                                style: const TextStyle(
+                                                    fontSize: 11,
+                                                    decoration: TextDecoration
+                                                        .lineThrough),
+                                              ),
+                                              Text(
+                                                "${oCcy.format(e.unitPrice)} đ",
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          _star(),
+                                        ]),
+                                      ),
                                     ),
                                   ))
                               .toList()),
@@ -134,11 +146,17 @@ class _HomeState extends State<Home> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         5,
-        (index) => Icon(
+        (index) => const Icon(
           Icons.star,
           color: Colors.yellow,
         ),
       ),
     );
   }
+}
+
+class DataSendDetailProduct {
+  final String? id;
+  final Function? callBack;
+  DataSendDetailProduct({this.id, this.callBack});
 }

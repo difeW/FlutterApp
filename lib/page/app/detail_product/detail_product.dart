@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:gotech_app/modal/modal_detail_product.dart';
-import 'package:gotech_app/responsive/api.dart';
-import 'package:gotech_app/responsive/repo.dart';
+import 'package:gotech_app/core/dialog/dialog.dart';
+
+import '../../../router/router_manager.dart';
 
 class DetailProduct extends StatefulWidget {
-  const DetailProduct({super.key, required this.id});
+  const DetailProduct({super.key, required this.id, this.callBack});
   final String id;
+  final Function? callBack;
+  void callCallback() {
+    callBack;
+  }
 
   @override
   State<DetailProduct> createState() => _DetailProductState();
 }
 
 class _DetailProductState extends State<DetailProduct> {
-  late Future<ModalDetailProduct> infoProduct;
-
   @override
   void initState() {
-    // TODO: implement initState
-    infoProduct = GotechRespontive.fetchGetDetailProduct(widget.id);
+    // infoProduct = GotechRespontive.fetchGetDetailProduct(widget.id);
     super.initState();
   }
 
@@ -33,21 +34,30 @@ class _DetailProductState extends State<DetailProduct> {
               fontWeight: FontWeight.bold,
             ),
           ),
+          leading: IconButton(
+              icon: const Icon(Icons.back_hand),
+              onPressed: () {
+                widget.callBack!("da pop");
+                Navigator.pop(context);
+              }),
         ),
         body: Container(
-          alignment: Alignment.center,
-          child: FutureBuilder(
-              future: infoProduct,
-              builder: ((context, snapshot) {
-                if (snapshot.hasData == true) {
-                  ModalDetailProduct data = snapshot.data as ModalDetailProduct;
-                  print(data.toJson());
-                  return Text(data.prod!.ram!.capacity.toString());
-                }
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              })),
-        ));
+            alignment: Alignment.center,
+            child: Column(
+              children: [
+                Center(
+                  child: Text(widget.id),
+                ),
+                ElevatedButton(
+                  child: const Text("add to cart"),
+                  onPressed: () {
+                    GotechshowDialog.dialogOneButton(() {
+                      Navigator.pushNamed(context, RouteManager.cart);
+                    }, context,
+                        "San pham da duoc them vao gio hang, ban co muon di den gio hang? ");
+                  },
+                ),
+              ],
+            )));
   }
 }
