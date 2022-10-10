@@ -26,4 +26,31 @@ class GotechshowDialog {
               ],
             )));
   }
+
+  static void showLoaderDialog(BuildContext context, Function()? callback) {
+    AlertDialog alert = AlertDialog(
+      insetPadding: const EdgeInsets.all(100),
+      content: SizedBox(
+        height: 150,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(),
+            Container(
+                margin: const EdgeInsets.only(top: 16),
+                child: const Text("Authenticating...")),
+            ElevatedButton(
+                onPressed: (() => {callback!()}), child: Text("Cancel"))
+          ],
+        ),
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 }

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class ModalDetailProduct {
   Prod? prod;
 

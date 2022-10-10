@@ -17,12 +17,12 @@ class ModalProductItem {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Picture'] = this.picture;
-    data['ProductName'] = this.productName;
-    data['MSRP'] = this.mSRP;
-    data['UnitPrice'] = this.unitPrice;
-    data['id'] = this.id;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Picture'] = picture;
+    data['ProductName'] = productName;
+    data['MSRP'] = mSRP;
+    data['UnitPrice'] = unitPrice;
+    data['id'] = id;
     return data;
   }
 }

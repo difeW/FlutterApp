@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:gotech_app/bloc/cart_bloc/cart_bloc.dart';
 import 'package:gotech_app/router/router_manager.dart';
 
 void main() {
-  runApp(App());
+  final getIt = GetIt.instance;
+  getIt.registerLazySingleton(() => CartBloc([]));
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
